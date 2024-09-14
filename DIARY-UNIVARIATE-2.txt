@@ -1,0 +1,340 @@
+# PETUNJUK PRAKTIKUM DISTRIBUSI UNIVARIATE - LANJUTAN
+
+#normal mixture
+
+p = 0.3
+normal.mixture = function(B, p)
+{
+	has = numeric(B)
+	for (i in 1:B)
+	{
+	x = rnorm(B)
+	y = rnorm(B, 0, 2)
+	u = runif(B)
+	if (u[i] < p) has[i] = x[i] else has[i] = y[i]
+	}
+	has
+}
+
+hasil = normal.mixture(10000, p)
+hist(hasil)
+summary(hasil)
+sd(hasil)
+
+p = 0.3
+normal.mixture = function(B, p)
+{
+	x = rnorm(B)
+	y = rnorm(B, 0, 2)
+	u = runif(B)
+	has = x
+	v = which(u>0.3)
+	has[v] = y[v]
+	has
+}
+
+hasil1 = normal.mixture(10000, p)
+hist(hasil1)
+summary(hasil1)
+summary(hasil)
+sd(hasil)
+sd(hasil1)
+
+#Example I.3.8
+
+p = 0.5
+normal.mixture = function(B, p)
+{
+	x = rnorm(B, 0, 3)
+	y = rnorm(B, 0, 4)
+	u = runif(B)
+	has = x
+	v = which(u>p)
+	has[v] = y[v]
+	has
+}
+
+hasil1 = normal.mixture(10000, p)
+hist(hasil1)
+summary(hasil1)
+var(hasil1)
+
+#Figure I.3.13
+
+u = seq(-7, 7, by = 0.01)
+x = dnorm(u)
+y = dnorm(u, 0, 2)
+v = 0.3*dnorm(u) + 0.7*dnorm(u,0, 2)
+plot(u,x,type="l")
+lines(u, y, lty=2)
+lines(u,v,lty=3)
+
+#Example I.3.9
+
+normal.mixture = function(B, p)
+{
+	x = rnorm(B, 0, 0.04)
+	y = rnorm(B, 0, 0.03)
+	u = runif(B)
+	has = x
+	v = which(u>p)
+	has[v] = y[v]
+	has
+}
+
+B = 10000
+p = 0.5
+hasil1 = normal.mixture(B, p)
+hist(hasil1)
+summary(hasil1)
+
+
+
+peluang = sum(hasil1< -0.1)/B
+peluang
+
+normal.mixture2 = function(B, p)
+{
+	has = numeric(B)
+	for (i in 1:B)
+	{
+	x = rnorm(B, 1, 4)
+	y = rnorm(B, -2, 3)
+	u = runif(B)
+	if (u[i] < p) has[i] = x[i] else has[i] = y[i]
+	}
+	has
+}
+
+B = 5000
+p = 0.25
+hasil2 = normal.mixture2(B, p)
+hist(hasil2)
+summary(hasil2)
+peluang2 = sum(hasil2< -1)/B
+peluang2
+
+
+normal.mixture = function(B, p)
+{
+	x = rnorm(B, 1, 4)
+	y = rnorm(B, -2, 3)
+	u = runif(B)
+	has = x
+	v = which(u>p)
+	has[v] = y[v]
+	has
+}
+
+B = 10000
+p = 0.25
+hasil1 = normal.mixture(B, p)
+hist(hasil1)
+summary(hasil1)
+peluang2 = sum(hasil1 < -1)/B
+peluang2
+
+
+
+#Figure I.3.14
+
+u = seq(-4, 3, by= 0.01)
+x = dnorm(u, 1, 0.5)
+y = dnorm(u, -1, 1)
+z = 0.9*x + 0.1*y
+plot(u,z,type="l", main="A skewed, leptokurtic normal mixture density", ylim=c(0, 0.9))
+lines(u,x, lty=2)
+lines(u,y, lty=5)
+
+#Figure I.3.15
+
+u = seq(-6, 6, by= 0.01)
+x = dt(u,3)
+y = dt(u, 6)
+z = dnorm(u)
+plot(u, z,type="l", main = "Comparison of Student t densities and standard normal")
+lines(u,x,lty= 2)
+lines(u, y, lty= 5)
+
+#Generalized Student t
+
+v = 3
+mu = 2
+beta = 2
+fv = function(x)
+{
+	has =(beta*v*pi)^(-0.5)*gamma(v/2)^(-1)*gamma((v+1)/2)*(1+(x-mu)^2/(beta*v))^(-0.5*(v+1))
+	has
+}
+
+fv(5)
+u = seq(-6,6,by=0.01)
+z = dnorm(u)
+y = fv(u)
+plot(u,z, type="l", ylim=c(0, 0.5), main="Comparison of normal dan Generalized t distribution")
+lines(u,y,lty=3)
+
+
+
+#Figure I.3.16
+
+u = seq(-6, 6, by= 0.01)
+x = dt(u, 6)
+z = dnorm(u, 0, sqrt(1.5))
+plot(u, z,type="l", main = "Comparison of Student t density and standard normal",ylim=c(0,0.5))
+lines(u,x,lty= 2)
+
+#Standardized Student t Distribution
+
+v = 3
+fv = function(x)
+{
+	has =((v-2)*pi)^(-0.5)*gamma(v/2)^(-1)*gamma((v+1)/2)*(1+x^2/(v-2))^(-0.5*(v+1))
+	has
+}
+
+fv(5)
+u = seq(-5,5,by=0.01)
+z = dnorm(u)
+y = fv(u)
+plot(u,z, type="l", ylim=c(0, 0.7), main="Comparison of normal dan Standardized Student t Distribution
+ t distribution")
+lines(u,y,lty=3)
+
+
+##Figure I.3.17
+
+
+#Figure I.3.18
+
+x = seq(-4, 4, by=0.01)
+u = seq(0, 4, by=0.01)
+z = pt(x,3)
+y1 = 1-pt(u,3)
+y2 = x
+y2[x<0] = 0
+y2[x >= 0] = pt(-u,3) + 1-pt(u,3)
+plot(x, z,type="l",main="The Excel t distribution function")
+lines(u, y1,lty=3)
+lines(x, y2, lty=5)
+
+
+#GEV distribution
+
+#install.packages("evd")
+library(evd)
+
+x = seq(0,10,by=0.01)
+y = dgev(x)
+plot(x,y,type="l", main = "GEV distribution delta = 0 dan beta = 1")
+
+#Gumbel Distribution
+
+x = seq(0,20,by=0.01)
+y = dgev(x,loc = 3, scale= 2)
+plot(x,y, type="l", main = "GEV distribution delta = 3 dan beta = 2")
+
+#Frechet Distribution
+
+x = seq(0,20,by=0.01)
+y = dgev(x,loc = 3, scale= 2, shape=1)
+plot(x,y, type="l", main = "GEV distribution delta = 3, beta = 2 dan shape=1")
+
+#Weibull Distribution
+
+x = seq(-20,20,by=0.01)
+y = dgev(x,loc = 3, scale= 2, shape=-1)
+plot(x,y, type="l", main = "GEV distribution delta = 3, beta = 2 dan shape=-1")
+
+
+
+#Figure I.3.20
+
+
+#Frechet Distribution
+
+x = seq(0,45,by=0.01)
+y = dgev(x,loc = 10, scale= 5, shape=1)
+plot(x,y, type="l", main = "GEV distribution delta = 10, beta = 5 dan shape=1")
+
+#Generalized Pareto Distribution
+
+library(evd)
+
+x = seq(0,20,by=0.01)
+y = dgpd(x,loc = 0, scale= 2, shape=0)
+plot(x,y, type="l", main = "Generalized Pareto distribution a = 3, b = 2 dan shape=0")
+
+
+library(evd)
+
+x = seq(0,20,by=0.01)
+y = dgpd(x,loc = 3, scale= 2, shape=1)
+plot(x,y, type="l", main = "Generalized Pareto distribution a = 3, b = 2 dan shape=1")
+
+#Cauchy Distribution
+
+x = seq(-7,7,by=0.01)
+y = dcauchy(x,loc = 0, scale= 1)
+z = dnorm(x)
+plot(x,z, type="l", main = "Normal and Cauchy distribution Loc = 0, Scale = 1")
+lines(x, y,lty=3)
+
+#Cauchy Distribution
+
+x = seq(-7,7,by=0.01)
+y = dcauchy(x,loc = 1, scale= 2)
+z = dnorm(x)
+plot(x,z, type="l", main = "Normal and Cauchy distribution Loc = 1, Scale = 2")
+lines(x, y,lty=3)
+
+#Levy Distribution
+#install.packages("VGAM")
+library(VGAM)
+x = seq(1,10,by=0.01)
+y = dlevy(x,loc = 1, scale= 2)
+
+plot(x,y, type="l", main = "Levy distribution Loc = 1, Scale = 2")
+ 
+#Levy Distribution
+
+delta = 1
+beta = 2
+fv = function(x)
+{
+	has =sqrt(beta/2/pi)*(x-delta)^(-1.5)*exp(-beta/2/(x-delta))
+	has
+}
+
+ 
+x = seq(delta, 20,by=0.01)
+z = fv(x)
+y = dlevy(x,loc = 1, scale= 2)
+plot(x,z,type="l",main="Levy distribution")
+lines(x,y,lty=3)
+
+#Kernel Density
+
+x = seq(-6,6,by=0.01)
+z = dnorm(x)
+w1 = rnorm(10)
+plot(density(w1),main="Perbandingan kernel density estimation dan Distribusi Normal Baku", xlim=c(-6,6),ylim=c(0,0.8))
+lines(x,z,lty=3)
+
+
+#Kernel Density
+
+x = seq(-6,6,by=0.01)
+z = dnorm(x)
+w1 = rnorm(100)
+plot(density(w1),main="Perbandingan kernel density estimation dan Distribusi Normal Baku", xlim=c(-6,6),ylim=c(0,0.8))
+lines(x,z,lty=3)
+
+#Kernel Density
+
+x = seq(-6,6,by=0.01)
+z = dnorm(x)
+w1 = rnorm(10000)
+plot(density(w1),main="Perbandingan kernel density estimation dan Distribusi Normal Baku", xlim=c(-6,6),ylim=c(0,0.8))
+lines(x,z,lty=3)
+
